@@ -48,11 +48,7 @@ public class CellController : MonoBehaviour, IClickable
             {
                 EventManager.CellMatched();
                 CellMatched();
-                foreach (var neighbour in neighbours)
-                {
-                    if (neighbour.clicked)
-                        neighbour.CellMatched();
-                }
+                
             }
         }
     }
