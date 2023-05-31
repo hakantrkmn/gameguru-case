@@ -8,7 +8,7 @@ using UnityEngine;
 public class GridCreator : MonoBehaviour
 {
     public CellController cellPrefab;
-    CellController[,] cells;
+    CellController[,] _cells;
     public int size;
 
 
@@ -32,7 +32,7 @@ public class GridCreator : MonoBehaviour
     [Button]
     public void CreateCell() //gamepanelin boyutlarına göre grid oluşturdum
     {
-        cells = new CellController[size, size];
+        _cells = new CellController[size, size];
 
         foreach (var cell in GetComponentsInChildren<CellController>())
         {
@@ -46,8 +46,15 @@ public class GridCreator : MonoBehaviour
      
         var height = GetComponent<RectTransform>().rect.height;
         var width = GetComponent<RectTransform>().rect.width;
+        
+        if (height > width)
+            height = width;
+        else
+            width = height;
+        
         var cellWidth = width / (size);
         var cellHeight = height / (size);
+        
         for (int i = 0; i < size; i++)
         {
             for (int j = 0; j < size; j++)
@@ -56,7 +63,7 @@ public class GridCreator : MonoBehaviour
                 var cell = Instantiate(cellPrefab.gameObject, pos, quaternion.identity, transform).GetComponent<CellController>();
                 cell.rectTransform.sizeDelta = new Vector2(cellWidth, cellHeight);
                 cell.transform.localPosition = pos;
-                cells[i,j] = cell;
+                _cells[i,j] = cell;
             }
         }
         
@@ -70,13 +77,13 @@ public class GridCreator : MonoBehaviour
             for (int j = 0; j < size; j++)
             {
                 if ((i + 1) < size)
-                    cells[i, j].neighbours.Add(cells[i + 1, j]);
+                    _cells[i, j].neighbours.Add(_cells[i + 1, j]);
                 if ((i - 1) >= 0)
-                    cells[i, j].neighbours.Add(cells[i - 1, j]);
+                    _cells[i, j].neighbours.Add(_cells[i - 1, j]);
                 if ((j + 1) < size)
-                    cells[i, j].neighbours.Add(cells[i, j+1]);
+                    _cells[i, j].neighbours.Add(_cells[i, j+1]);
                 if ((j - 1) >= 0)
-                    cells[i, j].neighbours.Add(cells[i, j-1]);
+                    _cells[i, j].neighbours.Add(_cells[i, j-1]);
 
             }
         }

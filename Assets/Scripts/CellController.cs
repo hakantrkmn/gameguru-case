@@ -13,14 +13,23 @@ public class CellController : MonoBehaviour, IClickable
 
     [HideInInspector] public List<CellController> neighbours;
 
-    bool clicked;
+    private bool _clicked;
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        xImage.enabled = true;
-        clicked = true;
-        EventManager.CheckForMatch();
+        CellClicked();
     }
+
+    private void CellClicked()
+    {
+        if (!_clicked)
+        {
+            xImage.enabled = true;
+            _clicked = true;
+            EventManager.CheckForMatch();
+        }
+    }
+    
 
     private void OnEnable()
     {
@@ -34,13 +43,13 @@ public class CellController : MonoBehaviour, IClickable
 
     void CheckForMatch()
     {
-        if (clicked)
+        if (_clicked)
         {
             int clickedAmount = 0;
 
             foreach (var neighbour in neighbours)
             {
-                if (neighbour.clicked)
+                if (neighbour._clicked)
                     clickedAmount++;
             }
 
@@ -56,11 +65,11 @@ public class CellController : MonoBehaviour, IClickable
     void CellMatched()
     {
         xImage.enabled = false;
-        clicked = false;
+        _clicked = false;
 
         foreach (var neighbour in neighbours)
         {
-            if (neighbour.clicked)
+            if (neighbour._clicked)
                 neighbour.CellMatched();
         }
     }
